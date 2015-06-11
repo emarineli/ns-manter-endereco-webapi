@@ -1,6 +1,7 @@
 package br.com.ns.webapi.endereco.recursos;
 
 import static br.com.ns.webapi.endereco.util.ConversaoUtil.transformarEmMensagemErro;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
@@ -15,7 +16,6 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -94,7 +94,7 @@ public class EnderecoRecurso {
 
 			return new ResponseEntity<List<String>>(
 					transformarEmMensagemErro(bindingResult.getFieldErrors()),
-					HttpStatus.BAD_REQUEST);
+					BAD_REQUEST);
 
 		} else {
 
@@ -118,7 +118,7 @@ public class EnderecoRecurso {
 		if (bindingResult.hasErrors()) {
 			return new ResponseEntity<List<String>>(
 					transformarEmMensagemErro(bindingResult.getFieldErrors()),
-					HttpStatus.BAD_REQUEST);
+					BAD_REQUEST);
 		} else {
 
 			return new ResponseEntity<Endereco>(

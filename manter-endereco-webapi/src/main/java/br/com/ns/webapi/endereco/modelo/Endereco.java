@@ -9,6 +9,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -29,23 +31,23 @@ public class Endereco {
 	private Long id;
 
 	@Column
-	@NotNull(message = "{endereco.logradouro.notnull}")
+	@NotBlank(message = "{endereco.logradouro.notblank}")
 	private String logradouro;
 
 	@Column
-	@NotNull(message = "{endereco.localidade.notnull}")
+	@NotBlank(message = "{endereco.localidade.notblank}")
 	private String localidade;
 
 	@Column
 	private String bairro;
 
 	@Column
-	@NotNull(message = "{endereco.uf.notnull}")
+	@NotBlank(message = "{endereco.uf.notblank}")
 	private String uf;
 
 	@Column
-	@NotNull(message = "{endereco.cep.notnull}")
 	@Pattern(regexp = "\\d{8}", message = "{endereco.cep.pattern}")
+	@NotBlank(message = "{endereco.cep.notblank}")
 	private String cep;
 
 	@Column
@@ -55,6 +57,27 @@ public class Endereco {
 	@NotNull(message = "{endereco.numero.notnull}")
 	@Min(value = 1, message = "{endereco.numero.valorMinimo}")
 	private int numero;
+
+	/**
+	 * Construtor padrão.
+	 */
+	public Endereco() {
+	}
+
+	/**
+	 * Construtor de um Endereço completo.
+	 *
+	 */
+	public Endereco(String logradouro, int numero, String complemento,
+			String localidade, String bairro, String uf, String cep) {
+		this.localidade = localidade;
+		this.logradouro = logradouro;
+		this.numero = numero;
+		this.complemento = complemento;
+		this.bairro = bairro;
+		this.uf = uf;
+		this.cep = cep;
+	}
 
 	public Long getId() {
 		return id;
