@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -Dserver.port=$PORT -Dmanagement.port=$PORT -jar target/manter-endereco-webapi-1.0.jar
+web: java $JAVA_OPTS -Dserver.port=$PORT -Dmanagement.port=$PORT  -Dspring.datasource.url=jdbc:mysql://us-cdbr-iron-east-02.cleardb.net:3306/heroku_a1e532b4855128c?reconnect=true -Dspring.datasource.username=bd9764d05e4381 -Dspring.datasource.password=d88a660e  -jar target/manter-endereco-webapi-1.0.jar
