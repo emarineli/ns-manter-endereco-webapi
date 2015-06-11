@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -52,6 +53,7 @@ public class Endereco {
 
 	@Column
 	@NotNull(message = "{endereco.numero.notnull}")
+	@Min(value = 1, message = "{endereco.numero.valorMinimo}")
 	private int numero;
 
 	public Long getId() {

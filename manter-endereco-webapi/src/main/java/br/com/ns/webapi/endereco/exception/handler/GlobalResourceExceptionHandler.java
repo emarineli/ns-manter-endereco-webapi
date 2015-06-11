@@ -34,7 +34,8 @@ public class GlobalResourceExceptionHandler {
 	 * @throws IOException
 	 */
 	@ExceptionHandler({ IllegalArgumentException.class,
-			NumberFormatException.class, TypeMismatchException.class })
+			NumberFormatException.class, TypeMismatchException.class,
+			IllegalStateException.class })
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
 	private MensagemErro handleIllegalArgumentException(Exception e)
