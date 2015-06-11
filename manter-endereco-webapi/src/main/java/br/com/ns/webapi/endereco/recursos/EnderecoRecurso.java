@@ -1,6 +1,6 @@
 package br.com.ns.webapi.endereco.recursos;
 
-import static br.com.ns.webapi.endereco.util.ValidatorUtil.transformarEmMensagemErro;
+import static br.com.ns.webapi.endereco.util.ConversaoUtil.transformarEmMensagemErro;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;

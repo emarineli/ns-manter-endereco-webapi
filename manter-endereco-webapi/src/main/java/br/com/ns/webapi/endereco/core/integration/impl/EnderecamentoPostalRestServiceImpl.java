@@ -7,6 +7,7 @@ import org.springframework.web.client.RestTemplate;
 
 import br.com.ns.webapi.endereco.core.integration.EnderecamentoPostalRestService;
 import br.com.ns.webapi.endereco.core.integration.modelo.Endereco;
+import br.com.ns.webapi.endereco.exception.handler.HttpClientErrorHandler;
 
 /**
  * Serviço de integração com serviço REST de Endereçamento Postal.
@@ -35,9 +36,9 @@ public class EnderecamentoPostalRestServiceImpl implements
 			endereco = restTemplate.getForObject(enderecamentoPostalUri + cep,
 					Endereco.class);
 		} catch (HttpClientErrorException e) {
-			throw e;
-		} catch (Exception e) {
-			throw e;
+
+			/* Delega tratamento */
+			HttpClientErrorHandler.handleHttpClientError(e);
 
 		}
 

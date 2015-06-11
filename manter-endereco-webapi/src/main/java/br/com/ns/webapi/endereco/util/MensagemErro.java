@@ -13,7 +13,21 @@ public class MensagemErro {
 
 	private String mensagem;
 
+	/**
+	 * Construtor padrão.
+	 */
+	public MensagemErro() {
+	}
+
 	public MensagemErro(String mensagem) {
+		this.mensagem = mensagem;
+	}
+
+	/**
+	 * Informa a mensagem de erro.
+	 * @param mensagem mensagem de erro.
+	 */
+	public void setMensagem(String mensagem) {
 		this.mensagem = mensagem;
 	}
 

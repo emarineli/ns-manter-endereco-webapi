@@ -23,7 +23,7 @@ public class EnderecoServiceImpl implements EnderecoService {
 
 	@Autowired
 	private EnderecoRepositorio enderecoRepositorio;
-	
+
 	@Autowired
 	private EnderecamentoPostalRestService restService;
 
@@ -83,10 +83,23 @@ public class EnderecoServiceImpl implements EnderecoService {
 			throw new IllegalArgumentException(
 					"Identificador do Endereço deve ser informado");
 		}
-		
-		restService.obterEnderecoPorCep(endereco.getCep());
 
-		return enderecoRepositorio.save(endereco);
+		if (enderecoRepositorio.exists(endereco.getId())) {
+
+			/* Obtem o endereço baseado no CEP enviado para validar as demais informaçoes enviadas
+			 * pelo cliente */
+			br.com.ns.webapi.endereco.core.integration.modelo.Endereco enderecoBucaCep = restService
+					.obterEnderecoPorCep(endereco.getCep());
+
+			
+			
+			return enderecoRepositorio.save(endereco);
+
+		} else {
+			throw new RecursoNaoEncontradoException(
+					"Endereço não pode ser atualizado pois não foi encontrado");
+		}
+
 	}
 
 }
