@@ -1,5 +1,7 @@
 package br.com.ns.webapi.endereco.modelo;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,7 +26,12 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @Entity
 @Table(name = "TBL_ENDERECO")
 @JsonInclude(Include.NON_NULL)
-public class Endereco {
+public class Endereco implements Serializable {
+
+	/**
+	 * Serial default.
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue

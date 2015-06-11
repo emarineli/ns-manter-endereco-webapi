@@ -159,8 +159,9 @@ public class EnderecoServiceImpl implements EnderecoService {
 		/* Verifica se a localidade possui CEP por lograoduro */
 		if (cepPorLogradouro(enderecoBucaCep.getCep())) {
 
-			if (!enderecoBucaCep.getBairro().equalsIgnoreCase(
-					endereco.getBairro())
+			if (!(endereco.getBairro() != null
+					&& !"".equals(endereco.getBairro().trim()) && enderecoBucaCep
+					.getBairro().equalsIgnoreCase(endereco.getBairro()))
 					|| !enderecoBucaCep.getLogradouro().equalsIgnoreCase(
 							endereco.getLogradouro())) {
 				return false;

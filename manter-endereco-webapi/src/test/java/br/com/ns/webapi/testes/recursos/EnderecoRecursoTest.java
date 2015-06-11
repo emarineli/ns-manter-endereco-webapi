@@ -1,7 +1,8 @@
 package br.com.ns.webapi.testes.recursos;
 
-import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
+import static org.hamcrest.Matchers.is;
+
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -16,7 +17,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import static org.springframework.http.HttpStatus.*;
+
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -45,7 +48,7 @@ import br.com.ns.webapi.endereco.recursos.EnderecoRecurso;
  *
  */
 @EnableWebMvc
-public class EnderecoRecursoTestes {
+public class EnderecoRecursoTest {
 
 	private static final String BASE_RESOURCE_URI = "/endereco";
 
@@ -65,6 +68,8 @@ public class EnderecoRecursoTestes {
 
 	private Endereco enderecoBase;
 
+	private Endereco enderecoCriado;
+
 	/**
 	 * Inicializa o contexto do mock.
 	 */
@@ -77,7 +82,7 @@ public class EnderecoRecursoTestes {
 				"Jardim Elvira", "Sao Paulo", "06250080");
 
 		/* TODO Clonar */
-		Endereco enderecoCriado = new Endereco("Rua Fransico Regina", 247,
+		enderecoCriado = new Endereco("Rua Fransico Regina", 247,
 				"Complemento Teste", "Osasco", "Jardim Elvira", "Sao Paulo",
 				"06250080");
 		enderecoCriado.setId(2L);
@@ -103,6 +108,18 @@ public class EnderecoRecursoTestes {
 		/* ṔOST */
 		when(enderecoService.criarEndereco(enderecoBase)).thenReturn(
 				enderecoCriado);
+
+		when(enderecoService.criarEndereco(enderecoCriado)).thenThrow(
+				new IllegalArgumentException(
+						"Identificador do Endereço não deve ser informado"));
+
+		/* PUT */
+		when(enderecoService.atualizarEndereco(enderecoCriado)).thenReturn(
+				enderecoCriado);
+
+		when(enderecoService.atualizarEndereco(enderecoBase)).thenThrow(
+				new IllegalArgumentException(
+						"Identificador do Endereço deve ser informado"));
 
 	}
 
@@ -267,6 +284,161 @@ public class EnderecoRecursoTestes {
 	}
 
 	/**
+	 * Testa a criação de um endereço já criado ou com o identificador já
+	 * preenchido,
+	 * 
+	 * @throws Exception
+	 *             caso algum erro ocorra.
+	 */
+	@Test
+	public void testCriarEnderecoJaExistenteOuComIdentificadorPreenchido()
+			throws Exception {
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		mockMvc.perform(
+				post(BASE_RESOURCE_URI)
+						.content(mapper.writeValueAsString(enderecoCriado))
+						.contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
+				.andExpect(status().isBadRequest())
+				.andExpect(
+						jsonPath(
+								"$.mensagem",
+								is("Identificador do Endereço não deve ser informado")));
+
+	}
+
+	/**
+	 * Testa a criação de um endereço válido e inexistente na base.
+	 * 
+	 * @throws Exception
+	 *             caso algum erro ocorra.
+	 */
+	@Test
+	public void testAtualizarEnderecoExistente() throws Exception {
+
+		templatePerformPut(OK.value()).andExpect(jsonPath("$.id", is(2)))
+				.andExpect(jsonPath("$.localidade", is("Osasco")))
+				.andExpect(jsonPath("$.uf", is("Sao Paulo")))
+				.andExpect(jsonPath("$.cep", is("06250080")))
+				.andExpect(jsonPath("$.logradouro", is("Rua Fransico Regina")))
+				.andExpect(jsonPath("$.numero", is(247)))
+				.andExpect(jsonPath("$.bairro", is("Jardim Elvira")))
+				.andExpect(jsonPath("$.complemento", is("Complemento Teste")));
+	}
+
+	/**
+	 * Testa a criação de um endereço válido e inexistente na base.
+	 * 
+	 * @throws Exception
+	 *             caso algum erro ocorra.
+	 */
+	@Test
+	public void testAtualizarEnderecoInexistente() throws Exception {
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		mockMvc.perform(
+				put(BASE_RESOURCE_URI)
+						.content(mapper.writeValueAsString(enderecoBase))
+						.contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
+				.andExpect(status().isBadRequest())
+				.andExpect(
+						jsonPath(
+								"$.mensagem",
+								is("Identificador do Endereço deve ser informado")));
+	}
+
+	
+	/**
+	 * Testa a atualização de um endereço com UF inválido.
+	 * 
+	 * @throws Exception
+	 *             caso algum erro ocorra.
+	 */
+	@Test
+	public void testAtualizarEnderecoInexistenteUfInvalidaOuNula() throws Exception {
+
+		enderecoCriado.setUf(null);
+
+		templatePerformPut(BAD_REQUEST.value()).andExpect(
+				jsonPath("$").isArray()).andExpect(
+				jsonPath("$.[0]", is("UF não pode ser nula ou vazia")));
+
+	}
+
+	/**
+	 * Testa a atualização de um endereço com Localidade inválido.
+	 * 
+	 * @throws Exception
+	 *             caso algum erro ocorra.
+	 */
+	@Test
+	public void testAtualizarEnderecoInexistenteLocalidadeInvalidaOuNula()
+			throws Exception {
+
+		enderecoCriado.setLocalidade(null);
+
+		templatePerformPut(BAD_REQUEST.value()).andExpect(
+				jsonPath("$").isArray()).andExpect(
+				jsonPath("$.[0]", is("Localidade não pode ser nula ou vazia")));
+
+	}
+
+	/**
+	 * Testa a atualização de um endereço com CEP inválido.
+	 * 
+	 * @throws Exception
+	 *             caso algum erro ocorra.
+	 */
+	@Test
+	public void testAtualizarEnderecoInexistenteCepNulo() throws Exception {
+
+		enderecoCriado.setCep(null);
+
+		templatePerformPut(BAD_REQUEST.value()).andExpect(
+				jsonPath("$").isArray()).andExpect(
+				jsonPath("$.[0]", is("CEP não pode ser nulo ou vazio")));
+
+	}
+
+	/**
+	 * Testa a atualização de um endereço com CEP inválido.
+	 * 
+	 * @throws Exception
+	 *             caso algum erro ocorra.
+	 */
+	@Test
+	public void testAtualizarEnderecoInexistenteCepPadraoInvalido()
+			throws Exception {
+
+		enderecoCriado.setCep("12234");
+
+		templatePerformPut(BAD_REQUEST.value()).andExpect(
+				jsonPath("$").isArray()).andExpect(
+				jsonPath("$.[0]", is("CEP não válido")));
+
+	}
+
+	/**
+	 * Testa a atualização de um endereço com Logradouro inválido.
+	 * 
+	 * @throws Exception
+	 *             caso algum erro ocorra.
+	 */
+	@Test
+	public void testAtualizarEnderecoInexistenteLogradouroInvalidoOuNulo()
+			throws Exception {
+
+		enderecoCriado.setLogradouro(null);
+
+		templatePerformPut(BAD_REQUEST.value()).andExpect(
+				jsonPath("$").isArray()).andExpect(
+				jsonPath("$.[0]", is("Logradouro não pode ser nula ou vazio")));
+
+	}
+	
+	/**
 	 * Template de post para as validações.
 	 * 
 	 * @return post realizado e pronto para assert.
@@ -283,6 +455,29 @@ public class EnderecoRecursoTestes {
 						post(BASE_RESOURCE_URI)
 								.content(
 										mapper.writeValueAsString(enderecoBase))
+								.contentType(APPLICATION_JSON)
+								.accept(APPLICATION_JSON))
+				.andExpect(status().is(status))
+				.andExpect(jsonPath("$").exists());
+	}
+
+	/**
+	 * Template de put para validaçoes.
+	 * 
+	 * @return put realizado e pronto para assert.
+	 * @throws JsonProcessingException
+	 * @throws Exception
+	 */
+	private ResultActions templatePerformPut(int status)
+			throws JsonProcessingException, Exception {
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		return mockMvc
+				.perform(
+						put(BASE_RESOURCE_URI)
+								.content(
+										mapper.writeValueAsString(enderecoCriado))
 								.contentType(APPLICATION_JSON)
 								.accept(APPLICATION_JSON))
 				.andExpect(status().is(status))

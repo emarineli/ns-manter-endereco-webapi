@@ -1,5 +1,7 @@
 package br.com.ns.webapi.endereco.core.integration.modelo;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -13,7 +15,12 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  */
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Endereco {
+public class Endereco implements Serializable {
+
+	/**
+	 * Serial default.
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private String logradouro;
 
@@ -24,6 +31,25 @@ public class Endereco {
 	private String uf;
 
 	private String cep;
+
+	/**
+	 * Construtor padrão.
+	 */
+	public Endereco() {
+	}
+
+	/**
+	 * Construtor de um Endereço completo.
+	 *
+	 */
+	public Endereco(String logradouro, String localidade, String bairro,
+			String uf, String cep) {
+		this.localidade = localidade;
+		this.logradouro = logradouro;
+		this.bairro = bairro;
+		this.uf = uf;
+		this.cep = cep;
+	}
 
 	public String getLogradouro() {
 		return logradouro;
