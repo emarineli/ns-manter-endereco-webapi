@@ -1,8 +1,8 @@
 package br.com.ns.webapi.endereco.core.service.impl;
 
-import javax.transaction.Transactional;
-
 import static javax.transaction.Transactional.TxType.*;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,7 +36,6 @@ public class EnderecoServiceImpl implements EnderecoService {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public Endereco obterEnderecoPeloIdentificador(Long id) {
 		Endereco ret = enderecoRepositorio.findOne(id);
 
@@ -49,7 +48,7 @@ public class EnderecoServiceImpl implements EnderecoService {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	@Transactional(REQUIRED)
 	public boolean removerEnderecoPeloIdentificador(Long id) {
 
 		/* Verifica se um endereço será realmente removido ou não */

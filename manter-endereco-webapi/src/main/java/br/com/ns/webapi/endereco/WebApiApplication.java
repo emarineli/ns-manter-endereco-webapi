@@ -2,6 +2,7 @@ package br.com.ns.webapi.endereco;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * Application class do Spring Boot responsável pela inicialização da Web Api.
@@ -14,6 +15,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  */
 @SpringBootApplication
+@EnableTransactionManagement
 public class WebApiApplication {
 
 	public static void main(String[] args) {
