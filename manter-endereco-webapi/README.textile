@@ -15,15 +15,14 @@ p.GET e DELETE -> http://manter-endereco-webapi.herokuapp.com/endereco/62
 POST ->  http://manter-endereco-webapi.herokuapp.com/endereco
 representação JSON -> 
 
-bc..
-	{
-		"logradouro":"Rua nove de Julho abcde",
-		"localidade":"Nova Europa",
-		"bairro":"Centro",
-		"uf":"São Paulo",
-		"cep":"14920000",
-		"numero":287, 
-		"complemento":"Perto do buteco do toninho pingaiada"
-	}
+bc. {
+	"logradouro":"Rua nove de Julho abcde",
+	"localidade":"Nova Europa",
+	"bairro":"Centro",
+	"uf":"São Paulo",
+	"cep":"14920000",
+	"numero":287, 
+	"complemento":"Perto do buteco do toninho pingaiada"
+}
 
 p. PUT -> utilizar representação de retorno do POST :)
